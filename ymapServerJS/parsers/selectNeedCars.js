@@ -29,7 +29,7 @@ function checksForValueInArea(latitude, longitude, objectRadius) {
     return objectRadius;
   }
 
-  let radius = 0.005; // Радиус
+  let radius = 10; // Радиус
 
   let latitudeYourGeolocation = 55.76; // Широта
 
@@ -44,11 +44,13 @@ function checksForValueInArea(latitude, longitude, objectRadius) {
 
     
 
-    module.exports.getArrayOfCars = function(){
+    module.exports.getArrayOfCars = function(arrayOfCompanies){
       //Найти массив нужных значений из базы данных
-      let infocar = mongoose.model('infocar', schema.getSchema);
 
-      infocar.find((err,array) => {
+      let infocar = mongoose.model('infocar', schema.getSchema);
+      // {latitude: {$lt: objectRadius.minLatitude, $gt: objectRadius.maxLatitude},longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude}}
+      // longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude}
+      infocar.find( {projection:{latitude: {$lt: objectRadius.minLatitude, $gt: objectRadius.maxLatitude},longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude} } },(err,array) => {
         if (err) {
           console.log('Произошла ошибка', err);
         }
@@ -58,11 +60,3 @@ function checksForValueInArea(latitude, longitude, objectRadius) {
         }
       })
     }
-    /**
-     * if (
-      checksForValueInArea(
-        Number(arrayOfCars[i].latitude),
-        Number(arrayOfCars[i].longitude),
-        objectRadius
-      )
-     */
