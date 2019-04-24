@@ -1,6 +1,8 @@
 
 const mongoose = require('mongoose');
 
+const schema = require('../connectionDatabase/schemaJSON');
+
 function checksForValueInArea(latitude, longitude, objectRadius) {
     if (
       objectRadius.minLatitude < latitude &&
@@ -44,6 +46,8 @@ function checksForValueInArea(latitude, longitude, objectRadius) {
 
     module.exports.getArrayOfCars = function(){
       //Найти массив нужных значений из базы данных
+      let infocar = mongoose.model('infocar', schema.getSchema);
+
       infocar.find((err,array) => {
         if (err) {
           console.log('Произошла ошибка', err);

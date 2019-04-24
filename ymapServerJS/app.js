@@ -1,9 +1,16 @@
 const express = require('express'); 
 const app = express();
-const config = require('./connectionDatabase/config');
-const  selectNeedCars = require('./public/selectNeedCars');
+//const config = require('./connectionDatabase/config');
+const  selectNeedCars = require('./parsers/selectNeedCars');
+const path = require('path');
+const staticAsset = require('static-asset');
+const  parserCarsharingSite = require('./parsers/parserCarsharingSite');
 
-//app.use(staticAsset(path.join(__dirname,'./public')));
+//parserCarsharingSite.getDataOfSite();// Достать все данные с сайта и положить в бд
+
+selectNeedCars.getArrayOfCars();// Достать необходимые данные из бд и отобразить
+
+app.use(staticAsset(path.join(__dirname,'./public')));
 app.use(express.static('public'));
 
 app.set('view engine', 'html');

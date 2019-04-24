@@ -12,11 +12,13 @@ schema.set('toJSON',{
     virtuals: true
 });
 
+module.exports.getSchema = schema;
+
 module.exports.getDataIntoDB = function(arrayOfCars){
 
-    let Club = mongoose.model('infocar', schema);
+    let infocar = mongoose.model('infocar', schema);
 
-    Club.collection.insertMany(arrayOfCars,(error,well)=>{
+    infocar.collection.insertMany(arrayOfCars,(error,well)=>{
         if (error) {
             console.log("Произошла ошибка!");
         }

@@ -17,7 +17,6 @@ module.exports.getDataOfSite = function(){
         // Используем регулярное выражение и конверитруем ответ в массив JSON-файлов
         arrayOfCars = getJSONarray(dataCar.match(regExp));
         schemaJSON.getDataIntoDB(arrayOfCars);
-        //console.log(arrayOfCars);
       });
 
   function getJSONarray(arrayOfCars) {
