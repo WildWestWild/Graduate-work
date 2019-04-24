@@ -4,15 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "cross-env PORT=80 nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "acorn": "^6.1.1",
+    "cheerio": "^1.0.0-rc.3",
+    "cors": "^2.8.5",
+    "cross-env": "^5.2.0",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
     "jade": "^1.11.0",
+    "mongoose": "^5.5.2",
+    "needle": "^2.3.0",
     "path": "^0.12.7",
     "static-asset": "^0.6.0",
     "ymaps": "^0.1.1"
