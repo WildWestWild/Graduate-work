@@ -3,19 +3,6 @@ const mongoose = require('mongoose');
 
 const schema = require('../connectionDatabase/schemaJSON');
 
-function checksForValueInArea(latitude, longitude, objectRadius) {
-    if (
-      objectRadius.minLatitude < latitude &&
-      objectRadius.maxLatitude > latitude &&
-      (objectRadius.minLongitude < longitude &&
-        objectRadius.maxLongitude > longitude)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  
   function getObjectRadius(
     latitudeYourGeolocation,
     longitudeYourGeolocation,
