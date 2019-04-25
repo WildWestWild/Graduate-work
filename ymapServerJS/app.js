@@ -4,11 +4,11 @@ const app = express();
 const  selectNeedCars = require('./parsers/selectNeedCars');
 const path = require('path');
 const staticAsset = require('static-asset');
-const  parserCarsharingSite = require('./parsers/parserCarsharingSite');
+//const  parserCarsharingSite = require('./parsers/parserCarsharingSite');
 
 //parserCarsharingSite.getDataOfSite();// Достать все данные с сайта и положить в бд
 
-selectNeedCars.getArrayOfCars();// Достать необходимые данные из бд и отобразить
+// Достать необходимые данные из бд и отобразить
 
 app.use(staticAsset(path.join(__dirname,'./public')));
 app.use(express.static('public'));
@@ -18,6 +18,23 @@ app.set('view engine', 'html');
 app.get('/', (req,res) => {
     res.sendFile('index.html');
 });
+app.get('/arrayOfCars',(req,res)=>{
+    return new Promise((resolve,reject)=>{
+        let arrayOfNeedCars = selectNeedCars.getArrayOfCars;
+        if (arrayOfNeedCars != null) {
+            resolve(arrayOfNeedCars);
+        } else {
+            reject(error);
+        }
+    })
+    .then(resolve => {
+        console.log(resolve);
+        console.log("is send");
+        res.json(resolve);
+    })
+    .catch(error => console.log(error));
+});
+
 
 app.post('/json', (req,res)=>{  
     if (req.method == 'POST') {
@@ -28,7 +45,7 @@ app.post('/json', (req,res)=>{
         });
 
         req.on('end', function () {
-            console.log(JSON.parse(jsonString));
+            //console.log(JSON.parse(jsonString));
         });
     }
 });

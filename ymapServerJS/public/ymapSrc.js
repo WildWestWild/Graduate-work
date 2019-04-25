@@ -1,5 +1,7 @@
 "use strict"
 
+//import { isObject } from "util";
+
 /**
  * Тип маршрутизации. Может принимать одно из двух строковых значений:
 "auto" — автомобильная маршрутизация;
@@ -28,7 +30,7 @@ function init () {
     for (let i = 0, len = arrayOfCars.length; i < len; i++) {
         // Вычисление длительности и времени проезда до машины и возвращение в массив
     }
-    
+    sendRequest();
     sendXMLHttpRequest(getHumanPath(55.76, 37.64, 55.74, 37.62));
     sendXMLHttpRequest(getСarPath(55.74, 37.62, 55.77, 37.61));
 
@@ -37,7 +39,7 @@ function init () {
 
 function getСarPath(latitudeYourGeolocation, longitudeYourGeolocation, latitudeCarGeolocation, longitudeCarGeolocation)
 {
-    var needCarRoute = null;
+    var needCarRoute = {};
     var yourGeolocation = [latitudeYourGeolocation, longitudeYourGeolocation];
     var carGeolocation = [latitudeCarGeolocation, longitudeCarGeolocation];
     var multiRouteModel = new ymaps.multiRouter.MultiRouteModel([yourGeolocation, carGeolocation], {
@@ -81,7 +83,7 @@ multiRouteView.model.events
     .add("requestsuccess", function (event) {
         var routes = event.get("target")
             .getRoutes();
-        getRouteOrError(routes, false);
+        needHumanRoute = getRouteOrError(routes, false);
         console.log("Найдено маршрутов: " + routes.length);
         for (var i = 0, l = routes.length; i < l; i++) {
             console.log("Длина маршрута " + (i + 1) + ": " + routes[i]
@@ -98,29 +100,36 @@ multiRouteView.model.events
 }
 function getRouteOrError(routes, isAuto)
 {
+    let movement = 'duration'; // Передвижение пешком
+    if (isAuto) 
+        movement = 'durationInTraffic'; // Передвижение на автомобиле
+    let needRoute = {};
+    let numberOfRoute = -1;
     switch (routes.length) {
         case 0:
             throw "No path";
-        case 1:
-            return routes[0];
-        default: getMinimum(routes, isAuto);
+        case 1:numberOfRoute = 0;
+            break;
+        default: numberOfRoute = getMinimum(routes, movement);
     }
+    needRoute.duration = routes[numberOfRoute].properties.get(movement).value/60; // Длительность В минутах
+    needRoute.distance = routes[numberOfRoute].properties.get(movement).value/1000; // Дальность в километрах
+    return needRoute;
 }
-function getMinimum(routes, isAuto) // 'duration'  'durationInTraffic'
+function getMinimum(routes, movement) // 'duration'  'durationInTraffic'
 {
-    let movement = 'duration'; // Передвижение пешком
-    let needRoute = null;
-    if (isAuto) 
-        movement = 'durationInTraffic'; // Передвижение на автомобиле
     
+    let needRoute = null;
     let min = routes[0].properties.get(movement).value/60;
+    let numberOfRoute = 0;
         for (let i = 1, len = routes.length; i < len; i++) {
             let currentElement = routes[i].properties.get(movement).value/60
             if (min < currentElement) {
-               min = currentElement;
+                min = currentElement;
+                numberOfRoute = i;
         }
     } 
-    return min;
+    return numberOfRoute;
 }
 
 function sendXMLHttpRequest(data)
@@ -143,17 +152,43 @@ function sendXMLHttpRequest(data)
     
 }
 
-function sendRequest(data){
-    fetch('/json', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            user: {
-                name: data,
-                email: "john@example.com"
-            }
-        })
-    });
+function sendRequest(){
+    console.log('get started Fetch ');
+    fetch('/arrayOfCars')       
+    .then(responce => {return responce.json()})
+    .then(responce => getArrayOfRoutes(responce))
+    .catch(error => console.log(error));
+}
+// latitude
+// longitude
+function getArrayOfRoutes(arrayOfCars){
+    arrayOfCars = isJson(arrayOfCars);
+    // В цикле запускать функции расстояния для каждого элемента массива и и добавлять результаты в массив
+    for (let i = 0, len = arrayOfCars.length; i < len; i++) {
+        //console.log(isJson(JSON.parse(JSON.stringify(arrayOfCars[i]))));
+        latitude = Number(arrayOfCars[i].latitude);
+        longitude = Number(arrayOfCars[i].longitude);
+        arrayOfCars[i].timeToCar = getHumanPath(37.480220, 55.669940, latitude, longitude);
+        arrayOfCars[i].timeToDestination = getСarPath(37.480220, 55.669940, latitude, longitude);
+    }
+}
+
+function isJson(str) {
+    let result = null;
+    /*
+    str = str.replace(/\\n/g, "\\n")  
+               .replace(/\\'/g, "\\'")
+               .replace(/\\"/g, '\\"')
+               .replace(/\\&/g, "\\&")
+               .replace(/\\r/g, "\\r")
+               .replace(/\\t/g, "\\t")
+               .replace(/\\b/g, "\\b")
+               .replace(/\\f/g, "\\f");
+// remove non-printable and other non-valid JSON chars
+str = str.replace(/[\u0000-\u0019]+/g,""); */
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        throw "Error with JSON";
+    }  
 }

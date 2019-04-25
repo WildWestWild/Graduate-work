@@ -16,7 +16,11 @@ const schema = require('../connectionDatabase/schemaJSON');
     return objectRadius;
   }
 
-  let radius = 10; // Радиус
+  compareAndSelectNeedGeolocation = function (objectRadius)
+  {
+      return {partner_id:14}; 
+  }
+  let radius = 0.005; // Радиус
 
   let latitudeYourGeolocation = 55.76; // Широта
 
@@ -31,19 +35,20 @@ const schema = require('../connectionDatabase/schemaJSON');
 
     
 
-    module.exports.getArrayOfCars = function(arrayOfCompanies){
+    module.exports.getArrayOfCars = new Promise((resolve, reject) => {
       //Найти массив нужных значений из базы данных
-
       let infocar = mongoose.model('infocar', schema.getSchema);
-      // {latitude: {$lt: objectRadius.minLatitude, $gt: objectRadius.maxLatitude},longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude}}
-      // longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude}
-      infocar.find( {projection:{latitude: {$lt: objectRadius.minLatitude, $gt: objectRadius.maxLatitude},longitude:{$lt: objectRadius.minLongitude, $gt: objectRadius.maxLongitude} } },(err,array) => {
+      infocar.find({latitude: {$gt: objectRadius.minLatitude, $lt: objectRadius.maxLatitude},longitude:{$gt: objectRadius.minLongitude, $lt: objectRadius.maxLongitude}},(err,array) => {
         if (err) {
-          console.log('Произошла ошибка', err);
+          reject(err);
         }
         else{
-          console.log("Массив -> ");
-          console.log(array);
+          resolve(array);
         }
-      })
-    }
+      });
+    })
+    .then((response)=>
+    { 
+      return response;
+    })
+    .catch(console.error);

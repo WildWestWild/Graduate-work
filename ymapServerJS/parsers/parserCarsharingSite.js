@@ -22,7 +22,6 @@ module.exports.getDataOfSite = function(){
   function getJSONarray(arrayOfCars) {
     for (let i = 0, len = arrayOfCars.length; i < len; i++) {
         arrayOfCars[i] = JSON.parse("{" + arrayOfCars[i] + "}");
-        console.log(arrayOfCars[i]);
       }
       return arrayOfCars;
   }
