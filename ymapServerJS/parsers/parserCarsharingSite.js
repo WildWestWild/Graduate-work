@@ -4,7 +4,7 @@ const schemaJSON = require('../connectionDatabase/schemaJSON');
 var URL = "https://carsharing.gde-luchshe.ru/map";
 
 
-module.exports.getDataOfSite = function(){
+module.exports.getDataOfSite = setInterval(function(){
 
       var arrayOfCars = [];
 
@@ -25,4 +25,4 @@ module.exports.getDataOfSite = function(){
       }
       return arrayOfCars;
   }
-}
+},180000);

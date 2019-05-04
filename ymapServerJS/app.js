@@ -1,12 +1,11 @@
 const express = require('express'); 
 const app = express();
-//const config = require('./connectionDatabase/config');
-const  selectNeedCars = require('./parsers/selectNeedCars');
+const selectNeedCars = require('./parsers/selectNeedCars');
 const path = require('path');
 const staticAsset = require('static-asset');
-//const  parserCarsharingSite = require('./parsers/parserCarsharingSite');
+const parserCarsharingSite = require('./parsers/parserCarsharingSite');
 
-//parserCarsharingSite.getDataOfSite();// Достать все данные с сайта и положить в бд
+parserCarsharingSite.getDataOfSite;// Достать все данные с сайта и положить в бд
 
 // Достать необходимые данные из бд и отобразить
 
@@ -18,36 +17,26 @@ app.set('view engine', 'html');
 app.get('/', (req,res) => {
     res.sendFile('index.html');
 });
-app.get('/arrayOfCars',(req,res)=>{
-    return new Promise((resolve,reject)=>{
-        let arrayOfNeedCars = selectNeedCars.getArrayOfCars;
-        if (arrayOfNeedCars != null) {
-            resolve(arrayOfNeedCars);
-        } else {
-            reject(error);
-        }
-    })
-    .then(resolve => {
-        console.log(resolve);
-        console.log("is send");
-        res.json(resolve);
-    })
-    .catch(error => console.log(error));
-});
-
-
-app.post('/json', (req,res)=>{  
-    if (req.method == 'POST') {
-        var jsonString = '';
-
-        req.on('data', function (data) {
-            jsonString += data;
-        });
-
-        req.on('end', function () {
-            //console.log(JSON.parse(jsonString));
-        });
-    }
+app.post('/fetch',(req,res) => {
+    let data = req.body;
+    console.log(data);
+    res.json(`{"hello" + "world" }`);
+    let arrayOfNeedCars = selectNeedCars.getArrayOfCars(data.latitude,data.longitude,data.radius);
+    app.get('/arrayOfCars',(req,res)=>{
+        return new Promise((resolve,reject)=>{
+            if (arrayOfNeedCars != null) {
+                resolve(arrayOfNeedCars);
+            } else {
+                reject(error);
+            }
+        })
+        .then(resolve => {
+            console.log(resolve);
+            console.log("is send");
+            res.json(resolve);
+        })
+        .catch(error => console.log(error));
+    });
 });
 
 module.exports = app;

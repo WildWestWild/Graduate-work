@@ -14,7 +14,6 @@ database().then(info => {
   global.console.error('Не подключилась база данных!');
   process.exit(1);
 });
-/*
 mongoose.connect(config.MONGO_URL,{ useNewUrlParser: true }, function(err,well){
     if (err) {
       console.log("Удаление не удалось!");
@@ -24,4 +23,3 @@ mongoose.connect(config.MONGO_URL,{ useNewUrlParser: true }, function(err,well){
       mongoose.connection.dropDatabase();
     }
 });
-*/

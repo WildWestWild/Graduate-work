@@ -176,14 +176,13 @@ function addTimePathOnArrayOfCars(arrayOfCars){
             // Получим данные о пути от пешехода до машины
             resolve(getPath(55.76, 37.64, latitude, longitude, false));
         })
-        .then(resolve => arrayOfCars[i].routeHuman = resolve)
-        .then(console.log(arrayOfCars[i]));
+        .then(resolve => arrayOfCars[i].routeHuman = resolve);
         let promiseCar = new Promise((resolve)=>
         {
             // Получим данные о пути на машине до пункта назначения
             resolve(getPath(55.76, 37.64, latitude, longitude,true));
         })
-        .then(resolve => arrayOfCars[i].routeCar = resolve)
-        .then(console.log(arrayOfCars[i]));
+        .then(resolve => arrayOfCars[i].routeCar = resolve);
     }
+    console.log(arrayOfCars);
 }
