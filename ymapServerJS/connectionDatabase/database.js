@@ -11,6 +11,6 @@ module.exports = () => {
       .on('close', () => global.console.log('Database connection closed.'))
       .once('open', () => resolve(mongoose.connections[0]));
 
-    mongoose.connect(config.MONGO_URL, { useNewUrlParser: true });
+    mongoose.connect(config.GLOBAL_MONGO_URL, { useNewUrlParser: true });
   });
 };

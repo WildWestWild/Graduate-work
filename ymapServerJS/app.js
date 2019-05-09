@@ -17,6 +17,7 @@ app.set('view engine', 'html');
 app.get('/', (req,res) => {
     res.sendFile('index.html');
 });
+
 app.post('/fetch',(req,res) => {
     let data = req.body;
     console.log(data);
@@ -38,5 +39,4 @@ app.post('/fetch',(req,res) => {
         .catch(error => console.log(error));
     });
 });
-
 module.exports = app;

@@ -20,6 +20,7 @@
     "ymaps": "^0.1.1"
   },
   "devDependencies": {
-    "eslint": "^5.16.0"
+    "eslint": "^5.16.0",
+    "mongodb": "^3.2.4"
   }
 }

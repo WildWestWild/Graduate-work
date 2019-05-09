@@ -1,9 +1,10 @@
 
-function getGeolocation(yourLongitude, yourLatitude, yourRadius) {
+function getGeolocation(yourLongitude, yourLatitude, yourRadius, arrayOfCompany) {
     var myData = {
         longitude: yourLongitude,
         latitude: yourLatitude,
-        radius: yourRadius
+        radius: yourRadius,
+        arrCompany: arrayOfCompany
     };
     
     var data = new FormData();
@@ -31,4 +32,4 @@ function getGeolocation(yourLongitude, yourLatitude, yourRadius) {
     });
 }
 
-getGeolocation(55.76, 37.64, 0.005);
+getGeolocation(55.76, 37.64, 0.005, [8,11,12,13,14,15,16,17,18]);
