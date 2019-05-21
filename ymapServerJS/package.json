@@ -12,15 +12,16 @@
   "license": "ISC",
   "dependencies": {
     "cross-env": "^5.2.0",
+    "ejs": "^2.6.1",
     "express": "^4.16.4",
-    "mongoose": "^5.5.2",
+    "html": "^1.0.0",
+    "mongodb": "^3.2.3",
+    "mongoose": "^5.5.5",
     "needle": "^2.3.0",
     "path": "^0.12.7",
-    "static-asset": "^0.6.0",
-    "ymaps": "^0.1.1"
+    "static-asset": "^0.6.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "mongodb": "^3.2.4"
+    "eslint": "^5.16.0"
   }
 }

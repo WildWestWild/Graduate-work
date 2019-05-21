@@ -12,7 +12,8 @@ parserCarsharingSite.getDataOfSite;// Достать все данные с са
 app.use(staticAsset(path.join(__dirname,'./public')));
 app.use(express.static('public'));
 
-app.set('view engine', 'html');
+//app.set('view engine', 'html');
+app.engine ('html', require ('ejs'). renderFile);
 
 app.get('/', (req,res) => {
     res.sendFile('index.html');
@@ -21,10 +22,14 @@ app.get('/', (req,res) => {
 app.post('/fetch',(req,res) => {
     let data = req.body;
     console.log(data);
+    let lat = 55.76;
+    let log = 37.64;
+    let rad = 0.005;
+    let arr = ['14']; 
     res.json(`{"hello" + "world" }`);
-    let arrayOfNeedCars = selectNeedCars.getArrayOfCars(data.latitude,data.longitude,data.radius);
     app.get('/arrayOfCars',(req,res)=>{
         return new Promise((resolve,reject)=>{
+            let arrayOfNeedCars = selectNeedCars.getArrayOfCars(lat, log, rad, arr);
             if (arrayOfNeedCars != null) {
                 resolve(arrayOfNeedCars);
             } else {
@@ -36,7 +41,7 @@ app.post('/fetch',(req,res) => {
             console.log("is send");
             res.json(resolve);
         })
-        .catch(error => console.log(error));
+        .catch(error => console.error(error));
     });
 });
 module.exports = app;

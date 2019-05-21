@@ -9,10 +9,13 @@ function getGeolocation(yourLongitude, yourLatitude, yourRadius, arrayOfCompany)
     
     var data = new FormData();
     data.append("json", JSON.stringify(myData));
-    
-    fetch('/fetch', {
+    window.fetch('/fetch', {
         method: "POST",
-        body: data
+        body: JSON.stringify({myData: 1 }), 
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
     }).then(function(response) {
         // Стоит проверить код ответа.
         if (!response.ok) {
@@ -32,4 +35,4 @@ function getGeolocation(yourLongitude, yourLatitude, yourRadius, arrayOfCompany)
     });
 }
 
-getGeolocation(55.76, 37.64, 0.005, [8,11,12,13,14,15,16,17,18]);
+getGeolocation(55.76, 37.64, 0.005, [12,14]);

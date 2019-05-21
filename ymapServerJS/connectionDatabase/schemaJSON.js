@@ -16,7 +16,7 @@ module.exports.getSchema = schema;
 
 module.exports.getDataIntoDB = function(arrayOfCars){
 
-    let infocar = mongoose.model('infocar', schema);
+    let infocar = mongoose.model('infocar', schema, 'infocar');
 
     infocar.collection.insertMany(arrayOfCars,(error,well)=>{
         if (error) {
