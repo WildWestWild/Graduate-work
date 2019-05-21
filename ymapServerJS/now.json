@@ -1,7 +1,10 @@
 {
     "version": 2,
-    "name": "ymapServer",
     "builds": [
-        { "src": "**/*.js", "use": "@now/node" }
+      { "src": "src/index.js", "use": "@now/node-server" }
+    ],
+    "routes": [
+      { "src": "/.*", "dest": "src/index.js" }
     ]
 }
+

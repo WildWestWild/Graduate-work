@@ -27,9 +27,6 @@ const connectionDatabase = require('../connectionDatabase/database');
         radius
       ); // Объект из четырех ограничений по радиусу
       let infocar = mongoose.model('infocar', schema.getSchema, 'infocar');
-      // 
-      // 
-      // 
       // partner_id:{$in : arrayOfCompany} 
       infocar.find({latitude: {$gt: objectRadius.minLatitude, $lt: objectRadius.maxLatitude}, longitude:{$gt: objectRadius.minLongitude, $lt: objectRadius.maxLongitude}, partner_id:{$in: arrayOfCompany}} ,(err,array) => {
         if (err) {
