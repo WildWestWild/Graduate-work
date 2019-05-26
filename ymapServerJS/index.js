@@ -1,7 +1,10 @@
 
+const dotenv = require('dotenv');
+dotenv.config();
 const app = require('./app');
 const database = require('./connectionDatabase/database');
 const config = require('./connectionDatabase/config');
+
 
   // Подключение базы данных и запуск сервера
   database().then(info => {
@@ -15,6 +18,7 @@ const config = require('./connectionDatabase/config');
     process.exit(1);
   });
   
+
 
 
 
