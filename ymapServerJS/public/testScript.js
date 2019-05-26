@@ -15,6 +15,7 @@ function getGeolocation(yourLongitude, yourLatitude, yourRadius, arrayOfCompany)
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
+            
           }
     }).then(function(response) {
         // Стоит проверить код ответа.

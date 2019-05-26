@@ -20,6 +20,7 @@ module.exports.getDataIntoDB = function(arrayOfCars){
 
     infocar.collection.insertMany(arrayOfCars,(error,well)=>{
         if (error) {
+            console.error(error);
             console.log("Произошла ошибка!");
         }
         else{

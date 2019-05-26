@@ -1,19 +1,12 @@
 const express = require('express'); 
 const app = express();
 const selectNeedCars = require('./parsers/selectNeedCars');
-const path = require('path');
-const staticAsset = require('static-asset');
 const parserCarsharingSite = require('./parsers/parserCarsharingSite');
 
 parserCarsharingSite.getDataOfSite;// Достать все данные с сайта и положить в бд
 
-// Достать необходимые данные из бд и отобразить
+app.use(express.static(__dirname + '/public'));
 
-app.use(staticAsset(path.join(__dirname,'./public')));
-app.use(express.static('public'));
-
-//app.set('view engine', 'html');
-app.engine ('html', require ('ejs'). renderFile);
 
 app.get('/', (req,res) => {
     res.sendFile('index.html');

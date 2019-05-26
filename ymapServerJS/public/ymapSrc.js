@@ -35,6 +35,7 @@ function getPath(latitudeYourGeolocation, longitudeYourGeolocation, latitudeCarG
     var needObjectGeolocation = [latitudeCarGeolocation, longitudeCarGeolocation];
     let movement;//Способ передвижение (на автомобиле или пешком)
     if (isAuto) {
+        
         var multiRouteModel = new ymaps.multiRouter.MultiRouteModel([yourGeolocation, needObjectGeolocation], {
             routingMode: 'auto',
             avoidTrafficJams: true
@@ -180,7 +181,7 @@ function addTimePathOnArrayOfCars(arrayOfCars){
         let promiseCar = new Promise((resolve)=>
         {
             // Получим данные о пути на машине до пункта назначения
-            resolve(getPath(55.76, 37.64, latitude, longitude,true));
+            resolve(getPath(55.74, 37.68, latitude, longitude,true));
         })
         .then(resolve => arrayOfCars[i].routeCar = resolve);
     }
