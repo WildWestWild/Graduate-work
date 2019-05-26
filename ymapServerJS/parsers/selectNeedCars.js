@@ -18,7 +18,7 @@ const connectionDatabase = require('../connectionDatabase/database');
     return objectRadius;
   }
 
-    module.exports.getArrayOfCars = (latitudeYourGeolocation, longitudeYourGeolocation, radius, arrayOfCompany) => { return new Promise((resolve, reject) => {
+    module.exports.getArrayOfCars = (latitudeYourGeolocation, latitudeYourDestination, longitudeYourGeolocation, longitudeYourDestination, radius, arrayOfCompany) => { return new Promise((resolve, reject) => {
       //Найти массив нужных значений из базы данных
       connectionDatabase();// Подлючение к базе данных
       let objectRadius = getObjectRadius(
@@ -39,6 +39,11 @@ const connectionDatabase = require('../connectionDatabase/database');
     })
     .then((response)=>
     { 
+      response.unshift({latGeolocation: latitudeYourGeolocation,
+         latDestination : latitudeYourDestination,
+         logGeolocation :  longitudeYourGeolocation,
+         logDestination : longitudeYourDestination});
+      console.log(response[0]);
       return response;
     })
     .catch(console.error);

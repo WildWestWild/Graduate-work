@@ -165,23 +165,26 @@ function acceptRequest(){
 // latitude
 // longitude
 function addTimePathOnArrayOfCars(arrayOfCars){
-    let latitude // Широта
-    let longitude // Долгота
+    let latitude // Широта (переменная для записи широты автомобиля постоянно меняется)
+    let longitude // Долгота Геолокации (переменная для записи долготы автомобиля постоянно меняется)
+    let latGeolocation = Number(arrayOfCars[0].latGeolocation); //Широта геолокации пользователя
+    let logGeolocation = Number(arrayOfCars[0].logGeolocation); // Долгота геолокации пользователя
+    let latDestination = Number(arrayOfCars[0].latDestination);// Широта ПН
+    let logDestination = Number(arrayOfCars[0].logDestination); // Долгота ПН
     // В цикле запускать функции расстояния для каждого элемента массива и и добавлять результаты в массив
-    for (let i = 0, len = arrayOfCars.length; i < len; i++) {
-        //console.log(isJson(JSON.parse(JSON.stringify(arrayOfCars[i]))));
-        latitude = Number(arrayOfCars[i].latitude);
-        longitude = Number(arrayOfCars[i].longitude);
+    for (let i = 1, len = arrayOfCars.length; i < len; i++) {
+        latitude = Number(arrayOfCars[i].latitude); 
+        longitude = Number(arrayOfCars[i].longitude); 
         let promiseHuman = new Promise((resolve)=>
         {
             // Получим данные о пути от пешехода до машины
-            resolve(getPath(55.76, 37.64, latitude, longitude, false));
+            resolve(getPath(latGeolocation, logGeolocation, latitude, longitude, false));
         })
         .then(resolve => arrayOfCars[i].routeHuman = resolve);
         let promiseCar = new Promise((resolve)=>
         {
             // Получим данные о пути на машине до пункта назначения
-            resolve(getPath(55.74, 37.68, latitude, longitude,true));
+            resolve(getPath(latDestination, logDestination, latitude, longitude,true));
         })
         .then(resolve => arrayOfCars[i].routeCar = resolve);
     }
