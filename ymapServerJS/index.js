@@ -1,9 +1,13 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 const app = require('./app');
 const database = require('./connectionDatabase/database');
 const config = require('./connectionDatabase/config');
 //const parserYmap = require('./public/parserYmap');
 const mongoose = require('mongoose');
 const mongodb = require('mongodb');
+
 
 database().then(info => {
   global.console.log(`Подключение к порту ${info.host}:${info.port}/${info.name}`);

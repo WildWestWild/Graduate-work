@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env PORT=80 nodemon index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,12 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "cross-env": "^5.2.0",
+    "cross-spawn": "^6.0.5",
     "express": "^4.16.4",
     "mongoose": "^5.5.2",
     "needle": "^2.3.0",
+    "nodemon": "^1.19.1",
     "path": "^0.12.7",
     "static-asset": "^0.6.0",
-    "ymaps": "^0.1.1"
+    "ymaps": "^0.1.1",
+    "dotenv": "^8.0.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
