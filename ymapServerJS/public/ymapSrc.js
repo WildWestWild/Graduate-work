@@ -1,9 +1,4 @@
 "use strict"
-
-//import { pipeline } from "stream";
-
-//import { isObject } from "util";
-
 /**
  * Тип маршрутизации. Может принимать одно из двух строковых значений:
 "auto" — автомобильная маршрутизация;
@@ -22,7 +17,6 @@ function init () {
         // её центр и коэффициент масштабирования.
         center: [55.76, 37.64], // Москва
         zoom: 10
-        //controls: ['geolocationControl']
     }, {
         searchControlProvider: 'yandex#search'  
     });
@@ -77,7 +71,7 @@ function getPath(latitudeYourGeolocation, longitudeYourGeolocation, latitudeCarG
                                 console.log(routes[i].properties.get('duration').text);
                                 }
                             let data = {};
-                            data.MultiRoute = multiRouteView;
+                            //data.MultiRoute = multiRouteView;
                             data.movement = isAuto;
                             data.arrRoutes = routes;
                             resolve(data);
@@ -135,35 +129,13 @@ function getMinimum(routes, movement) // 'duration'  'durationInTraffic'
     } 
     return numberOfRoute;
 }
-
-function sendXMLHttpRequest(data)
-{
-    let xhr = new XMLHttpRequest();
-    let url = "http://localhost/json";
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json");
-    data = JSON.stringify(data);  
-    xhr.send(data);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            var json = JSON.parse(xhr.responseText);
-            console.log('it`s ok');  
-        }
-        else{
-            console.log('error');
-        }
-    };   
-}
-
 function acceptRequest(){
-    console.log('get started Fetch ');
+    console.log('get started Fetch Request');
     fetch('/arrayOfCars')       
     .then(responce => {return responce.json()})
     .then(responce => addTimePathOnArrayOfCars(responce))
     .catch(error => console.log(error));
 }
-// latitude
-// longitude
 function addTimePathOnArrayOfCars(arrayOfCars){
     let latitude // Широта (переменная для записи широты автомобиля постоянно меняется)
     let longitude // Долгота Геолокации (переменная для записи долготы автомобиля постоянно меняется)
@@ -171,22 +143,47 @@ function addTimePathOnArrayOfCars(arrayOfCars){
     let logGeolocation = Number(arrayOfCars[0].logGeolocation); // Долгота геолокации пользователя
     let latDestination = Number(arrayOfCars[0].latDestination);// Широта ПН
     let logDestination = Number(arrayOfCars[0].logDestination); // Долгота ПН
+    let arrOfPromise = []; // Массив промиссов
+    // Массив результатов
     // В цикле запускать функции расстояния для каждого элемента массива и и добавлять результаты в массив
-    for (let i = 1, len = arrayOfCars.length; i < len; i++) {
-        latitude = Number(arrayOfCars[i].latitude); 
-        longitude = Number(arrayOfCars[i].longitude); 
-        let promiseHuman = new Promise((resolve)=>
-        {
-            // Получим данные о пути от пешехода до машины
-            resolve(getPath(latGeolocation, logGeolocation, latitude, longitude, false));
+        for (let i = 1, len = arrayOfCars.length; i < len; i++) {
+            latitude = Number(arrayOfCars[i].latitude); 
+            longitude = Number(arrayOfCars[i].longitude); 
+            let promiseHuman = new Promise((resolve)=>
+            {
+                // Получим данные о пути от пешехода до машины
+                resolve(getPath(latGeolocation, logGeolocation, latitude, longitude, false));
+            })
+            .then(resolve =>  arrayOfCars[i].routeHuman = resolve);
+            let promiseCar = new Promise((resolve)=>
+            {
+                // Получим данные о пути на машине до пункта назначения
+                resolve(getPath(latDestination, logDestination, latitude, longitude,true));
+            })
+            .then(resolve => arrayOfCars[i].routeCar = resolve);
+            arrOfPromise.push(promiseHuman); // Добавим в массив промиссов
+            arrOfPromise.push(promiseCar); // Добавим в массив промиссов
+        }
+        return Promise.all(arrOfPromise) // Ждём пока выполниться всё
+        .then(resolve => {
+            console.log(resolve);
+            getDataToMobile(arrayOfCars);
         })
-        .then(resolve => arrayOfCars[i].routeHuman = resolve);
-        let promiseCar = new Promise((resolve)=>
-        {
-            // Получим данные о пути на машине до пункта назначения
-            resolve(getPath(latDestination, logDestination, latitude, longitude,true));
-        })
-        .then(resolve => arrayOfCars[i].routeCar = resolve);
     }
-    console.log(arrayOfCars);
+function getDataToMobile(arrayOfCars){
+    console.log('get started Fetch Responce');
+    {
+      var xhr = new XMLHttpRequest();
+      var url = "/Mobile";
+      xhr.open("POST", url, true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+              var json = JSON.parse(xhr.responseText);
+              console.log(json);
+          }
+      };
+      var data = JSON.stringify(arrayOfCars);
+      xhr.send(data);
+    };
 }
