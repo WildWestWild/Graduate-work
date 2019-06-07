@@ -4,6 +4,7 @@ const selectNeedCars = require('./parsers/selectNeedCars');
 const parserCarsharingSite = require('./parsers/parserCarsharingSite');
 const Browser = require('zombie');
 const bodyParser = require('body-parser');
+const config = require('./connectionDatabase/config')
 
 browser = new Browser();
 
@@ -15,7 +16,7 @@ app.use(express.static(__dirname + '/public')); // Статический пут
 
 app.get('/browser', (req,res) => {
     let conStr = 'http://' + req.connection.remoteAddress + ':' + req.connection.remotePort; 
-    browser.visit('http://localhost/', ()=>{
+    browser.visit(config.GLOBAL_URL_SERVER, ()=>{
             try {
                 browser.wait(()=>
                 {
