@@ -4,25 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "cross-env PORT=80 nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cross-env": "^5.2.0",
-    "cross-spawn": "^6.0.5",
-    "dotenv": "^8.0.0",
     "express": "^4.16.4",
-    "fetch": "^1.1.0",
-    "html": "^1.0.0",
-    "mongoose": "^5.5.5",
+    "mongoose": "^5.5.2",
     "needle": "^2.3.0",
-    "node-fetch": "^2.6.0",
-    "nodemon": "^1.19.1",
-    "zombie": "^6.1.4"
+    "path": "^0.12.7",
+    "static-asset": "^0.6.0",
+    "ymaps": "^0.1.1",
+    "mongodb": "^3.2.4"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
