@@ -133,10 +133,11 @@ function acceptRequest(){
     console.log('get started Fetch Request');
     fetch('/arrayOfCars')       
     .then(responce => {return responce.json()})
-    .then(responce => addTimePathOnArrayOfCars(responce))
+    .then((responce) => {return addTimePathOnArrayOfCars(responce)})
     .catch(error => console.log(error));
 }
 function addTimePathOnArrayOfCars(arrayOfCars){
+    console.log(arrayOfCars);
     let latitude // Широта (переменная для записи широты автомобиля постоянно меняется)
     let longitude // Долгота Геолокации (переменная для записи долготы автомобиля постоянно меняется)
     let latGeolocation = Number(arrayOfCars[0].latGeolocation); //Широта геолокации пользователя
@@ -146,6 +147,7 @@ function addTimePathOnArrayOfCars(arrayOfCars){
     let arrOfPromise = []; // Массив промиссов
     // Массив результатов
     // В цикле запускать функции расстояния для каждого элемента массива и и добавлять результаты в массив
+    console.log('Array was getted');
         for (let i = 1, len = arrayOfCars.length; i < len; i++) {
             latitude = Number(arrayOfCars[i].latitude); 
             longitude = Number(arrayOfCars[i].longitude); 
@@ -172,18 +174,16 @@ function addTimePathOnArrayOfCars(arrayOfCars){
     }
 function getDataToMobile(arrayOfCars){
     console.log('get started Fetch Responce');
-    {
-      var xhr = new XMLHttpRequest();
-      var url = "/Mobile";
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-              var json = JSON.parse(xhr.responseText);
-              console.log(json);
-          }
-      };
-      var data = JSON.stringify(arrayOfCars);
-      xhr.send(data);
+    var xhr = new XMLHttpRequest();
+    var url = "/Mobile";
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.parse(xhr.responseText);
+            console.log(json);
+        }
     };
+    var data = JSON.stringify(arrayOfCars);
+    return xhr.send(data);
 }

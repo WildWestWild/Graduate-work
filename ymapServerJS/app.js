@@ -6,50 +6,72 @@ const Browser = require('zombie');
 const bodyParser = require('body-parser');
 const config = require('./connectionDatabase/config')
 
-browser = new Browser();
-
 parserCarsharingSite.getDataOfSite;// Достать все данные с сайта и положить в бд
-var flag = true; // Замыкание с использованием flag для browser.wait
+
 var jsonParser = bodyParser.json(); // Парсер req.body в json формат
 
 app.use(express.static(__dirname + '/public')); // Статический путь для всех папок
 
-app.get('/browser', (req,res) => {
-    let conStr = 'http://' + req.connection.remoteAddress + ':' + req.connection.remotePort; 
-    res.send(conStr);   
-    browser.visit(config.GLOBAL_URL_SERVER, ()=>{
+
+
+
+/*function startBrowser(responce, callback){
+        browser = new Browser({
+            maxWait: 51000,
+            waitDuration: 50000
+        });
+        browser.visit(config.LOCAL_URL, ()=>{
             try {
-                browser.wait(()=>
-                {
-                  while (flag);
-                });
+                browser.wait()
+                .then(console.log('Все скрипты отработали!'));
             } catch (err) {
-            console.log("Ошибка обработки браузера"); 
+                console.log("Ошибка обработки браузера"); 
             } 
-    });
-    app.post('/Mobile', jsonParser, (req,res)=>{
-        console.log('Массив ?');
-        flag = false;
-        let resultMobileRequest = req.body;
-        if (resultMobileRequest != undefined) {
-            app.get(conStr, (request,responce) => {
-                console.log(conStr);
-                console.log(resultMobileRequest);
-                responce.json(resultMobileRequest);
-            })
-        } else {
-            throw "Ошибка! req.body = undefinded!"; 
-        }
-    })
-});
+        });
+        app.post('/Mobile',jsonParser, (req,res)=>{
+                console.log('Массив ?');
+                let resultArray = req.body;
+                callback(resultArray, responce);
+        }) 
+}*/
+app.use(function(req, res, next){
+    next();
+})
+function startBrowser(){
+    return new Promise((resolve, reject) => {
+        console.log("Запуск браузера");
+        browser = new Browser({
+            maxWait: 35000,
+            waitDuration: 30000
+        });
+        browser.visit(config.LOCAL_URL, ()=>{
+            try {
+                browser.wait()
+                .then(console.log('Все скрипты отработали!'));
+            } catch (err) {
+                console.log("Ошибка обработки браузера"); 
+            } 
+            app.post('/Mobile',jsonParser, (req,res, next)=>{
+                console.log('Массив ?');
+                next();
+                resolve(req.body);
+            }),function(req,res, next) {
+                res.status(201).end();
+            }
+        });
+    }).then(resolve => info(resolve))
+}
+app.get('/');// Отправка данных в браузер
 
-app.get('/', (req,res) => {
-    res.sendFile('index.html');
-});
+//var data = undefined;
 
-app.post('/fetch',  jsonParser, (req,res) => {
+app.all('/fetch', (request,response, next)=>{
+    next();
+})
+
+app.post('/fetch',  jsonParser, (request,responce, next) => {
     console.log("JSON!!11");
-    let data = req.body; // Данные с JSON ответа от обраузера
+    data = checkData(request.body); // Данные с JSON ответа от обраузера
     console.log(data);
     app.get('/arrayOfCars',(req,res)=>{
         return new Promise((resolve,reject)=>{
@@ -67,5 +89,41 @@ app.post('/fetch',  jsonParser, (req,res) => {
         })
         .catch(error => console.error(error));
     });
+    
+    let promiseJSON = new Promise((resolve, reject)=>{
+        let resultJSON = startBrowser();
+        if (resultJSON != undefined) {
+           resolve(resultJSON);
+        } else {
+            reject('error - resultJSON is undefined');
+        }
+    })
+    return promiseJSON
+            .then((resolve)=> {return responce.json(resolve)})
+            .catch(reject => console.log(reject));
 });
+
+
+app.post('/test', jsonParser, (req,res)=> {
+    app.get('/test2', (req,res)=> {
+        
+    })
+    return res.json({name: "hey"});
+})
+
+
+function checkData(data){
+    if (data.hasOwnProperty('radius')) {
+        return data
+    } else {
+        throw "Неверные данные!";
+    }
+}
+
+function info(data){
+    console.log(data);
+    return data;
+}
+
 module.exports = app;
+
