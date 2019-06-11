@@ -13,10 +13,6 @@ var jsonParser = bodyParser.json(); // Парсер req.body в json форма�
 app.use(express.static(__dirname + '/public')); // Статический путь для всех папок
 
 
-
-app.use(function(req, res, next){
-    next();
-})
 function startBrowser(){
     return new Promise((resolve, reject) => {
         console.log("Запуск браузера");
@@ -31,23 +27,19 @@ function startBrowser(){
             } catch (err) {
                 console.log("Ошибка обработки браузера"); 
             } 
-            app.post('/Mobile',jsonParser, (req,res, next)=>{
-                console.log('Массив ?');
-                next();
-                resolve(req.body);
-            }),function(req,res, next) {
-                res.status(201).end();
-            }
+           
         });
+        app.post('/Mobile',jsonParser, (req,res, next)=>{
+            console.log('Массив ?');
+            next();
+            resolve(req.body);
+        }),function(req,res, next) {
+            res.status(201).end();
+        }
     }).then(resolve => info(resolve))
 }
 app.get('/');// Отправка данных в браузер
 
-//var data = undefined;
-
-app.all('/fetch', (request,response, next)=>{
-    next();
-})
 
 app.post('/fetch',  jsonParser, (request,responce, next) => {
     console.log("JSON!!11");
