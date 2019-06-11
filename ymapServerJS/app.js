@@ -14,26 +14,6 @@ app.use(express.static(__dirname + '/public')); // Статический пут
 
 
 
-
-/*function startBrowser(responce, callback){
-        browser = new Browser({
-            maxWait: 51000,
-            waitDuration: 50000
-        });
-        browser.visit(config.LOCAL_URL, ()=>{
-            try {
-                browser.wait()
-                .then(console.log('Все скрипты отработали!'));
-            } catch (err) {
-                console.log("Ошибка обработки браузера"); 
-            } 
-        });
-        app.post('/Mobile',jsonParser, (req,res)=>{
-                console.log('Массив ?');
-                let resultArray = req.body;
-                callback(resultArray, responce);
-        }) 
-}*/
 app.use(function(req, res, next){
     next();
 })
@@ -44,7 +24,7 @@ function startBrowser(){
             maxWait: 35000,
             waitDuration: 30000
         });
-        browser.visit(config.LOCAL_URL, ()=>{
+        browser.visit(config.GLOBAL_URL_SERVER, ()=>{
             try {
                 browser.wait()
                 .then(console.log('Все скрипты отработали!'));
