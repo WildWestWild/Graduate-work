@@ -9,7 +9,7 @@ const config = require('./connectionDatabase/config');
   database().then(info => {
     global.console.log(`Подключение к порту ${info.host}:${info.port}/${info.name}`);
     app.listen(config.PORT, () => 
-      global.console.log(`Сервер работает на порту ${config.PORT}!`));   
+      global.console.log(`Сервер работает на порту ${config.PORT}!`));  
   })
   .catch((error) => {
     global.console.error('Не подключилась база данных!', error);

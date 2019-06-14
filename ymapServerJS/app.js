@@ -1,17 +1,16 @@
-const express = require('express'); 
+const express = require("express");
 const app = express();
-const selectNeedCars = require('./parsers/selectNeedCars');
-const parserCarsharingSite = require('./parsers/parserCarsharingSite');
-const Browser = require('zombie');
-const bodyParser = require('body-parser');
-const config = require('./connectionDatabase/config')
+const selectNeedCars = require("./parsers/selectNeedCars");
+const parserCarsharingSite = require("./parsers/parserCarsharingSite");
+const Browser = require("zombie");
+const bodyParser = require("body-parser");
+const config = require("./connectionDatabase/config");
 
-parserCarsharingSite.getDataOfSite;// Достать все данные с сайта и положить в бд
+parserCarsharingSite.getDataOfSite; // Достать все данные с сайта и положить в бд
 
 var jsonParser = bodyParser.json(); // Парсер req.body в json формат
 
-app.use(express.static(__dirname + '/public')); // Статический путь для всех папок
-
+app.use(express.static(__dirname + "/public")); // Статический путь для всех папок
 
 function startBrowser(){
     return new Promise((resolve, reject) => {
@@ -30,9 +29,9 @@ function startBrowser(){
            
         });
         app.post('/Mobile',jsonParser, (req,res, next)=>{
-            console.log('Массив ?');
             next();
-            resolve(req.body);
+            let result = sortArray(req.body);
+            resolve(result);
         }),function(req,res, next) {
             res.status(201).end();
         }
@@ -74,28 +73,42 @@ app.post('/fetch',  jsonParser, (request,responce, next) => {
             .then((resolve)=> {return responce.json(resolve)})
             .catch(reject => console.log(reject));
 });
-
-
-app.post('/test', jsonParser, (req,res)=> {
-    app.get('/test2', (req,res)=> {
-        
-    })
-    return res.json({name: "hey"});
-})
-
-
-function checkData(data){
-    if (data.hasOwnProperty('radius')) {
-        return data
-    } else {
-        throw "Неверные данные!";
-    }
+function checkData(data) {
+  if (data.hasOwnProperty("radius")) {
+    return data;
+  } else {
+    throw "Неверные данные!";
+  }
 }
 
-function info(data){
-    console.log(data);
-    return data;
+function info(data) {
+  console.log(data);
+  return data;
+}
+
+function sortArray(result) {
+    result = result.filter(item => {
+      if (item.hasOwnProperty("routeCar")) {
+        return item.routeCar.distanceCar < item.fuel * 5;
+      } else return false;
+    });
+    result = result.sort(function(a, b) {
+      if (
+        Number.parseFloat(a.routeCar.durationCar) +
+          Number.parseFloat(a.routeHuman.durationHuman) >
+        Number.parseFloat(b.routeCar.durationCar) +
+          Number.parseFloat(b.routeHuman.durationHuman)
+      )
+        return 1;
+      if (
+        Number.parseFloat(a.routeCar.durationCar) +
+          Number.parseFloat(a.routeHuman.durationHuman) <
+        Number.parseFloat(b.routeCar.durationCar) +
+          Number.parseFloat(b.routeHuman.durationHuman)
+      )
+        return -1;
+    });
+    return result;
 }
 
 module.exports = app;
-
