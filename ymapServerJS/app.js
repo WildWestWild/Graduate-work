@@ -31,8 +31,7 @@ function startBrowser(){
         app.post('/Mobile',jsonParser, (req,res, next)=>{
             next();
             let result = sortArray(req.body);
-            let objectJSON = JSON.stringify({cars: result});
-            resolve(objectJSON);
+            resolve(result);
         }),function(req,res, next) {
             res.status(201).end();
         }
